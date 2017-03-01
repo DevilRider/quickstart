@@ -7,7 +7,6 @@ import org.liang.domain.mapper.CityMapper;
 import org.liang.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    @CachePut(value = "cityCache", keyGenerator = "wiselyKeyGenerator")
+    @CacheEvict(value = "cityCache", keyGenerator = "wiselyKeyGenerator")
     public boolean updateCity(Long id, City city) {
         city.setId(id);
         int rst = cityMapper.update(city);
