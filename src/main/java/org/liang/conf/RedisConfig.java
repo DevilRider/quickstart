@@ -26,11 +26,11 @@ public class RedisConfig extends CachingConfigurerSupport {
     public KeyGenerator wiselyKeyGenerator() {
         return new KeyGenerator() {
             @Override
-            public Object generate(Object target, Method method, Object... params) {
+            public Object generate(Object target, Method method, Object... objects) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(target.getClass().getName());
                 sb.append(method.getName());
-                for (Object obj : params) {
+                for (Object obj : objects) {
                     sb.append(obj.toString());
                 }
                 return sb.toString();
@@ -40,12 +40,13 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     @Bean
-    public CacheManager cacheManager(@SuppressWarnings("rawtypes") RedisTemplate redisTemplate) {
+    public CacheManager cacheManager(RedisTemplate<?, ?> redisTemplate) {
         return new RedisCacheManager(redisTemplate);
     }
 
     @Bean
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory factory) {
+        // 解决 key 乱码
         StringRedisTemplate template = new StringRedisTemplate(factory);
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer =
                         new Jackson2JsonRedisSerializer<Object>(Object.class);
