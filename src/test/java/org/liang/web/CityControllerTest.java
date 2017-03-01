@@ -66,7 +66,8 @@ public class CityControllerTest {
         mvc.perform(post("/cities/")
             .param("id", "1")
             .param("name", "上海")
-            .param("state", "20"))
+            .param("state", "20")
+            .flashAttr("city", city))
             .andExpect(content().string(equalTo("success")));
     }
 
@@ -80,13 +81,13 @@ public class CityControllerTest {
         city.setName("北京");
         city.setState("30");
         
-        given(this.cityService.save(city)).willReturn(true);
+        given(this.cityService.updateCity(1L, city)).willReturn(true);
         
         mvc.perform(put("/cities/1")
             .param("name", "北京")
-            .param("state", "30"))
+            .param("state", "30")
+            .flashAttr("city", city))
             .andExpect(content().string(equalTo("success")));
-
     }
 
     /**
