@@ -43,7 +43,6 @@ public class CityController {
      *         除了@ModelAttribute绑定参数之外，还可以通过@RequestParam从页面中传递参数
      * </pre>
      * 
-     * @param city
      */
     @RequestMapping(value = "/", method = POST)
     public String postCity(@ModelAttribute City city) {
@@ -58,8 +57,6 @@ public class CityController {
      * 处理"/cities/{id}"的GET请求，用来获取url中id值的city信息
      *       url中的id可通过@PathVariable绑定到函数的参数中
      * </pre>
-     * 
-     * @param id
      */
     @RequestMapping(value = "/{id}", method = GET)
     public City getCity(@PathVariable Long id) {
@@ -72,9 +69,6 @@ public class CityController {
      * <pre>
      * 处理"/cities/{id}"的PUT请求，用来更新city信息
      * </pre>
-     * 
-     * @param id
-     * @param city
      */
     @RequestMapping(value = "/{id}", method = PUT)
     public String putCity(@PathVariable Long id, @ModelAttribute City city) {
@@ -88,8 +82,6 @@ public class CityController {
      * <pre>
      * 处理"/cities/{id}"的DELETE请求，用来删除city。
      * </pre>
-     * 
-     * @param id
      */
     @RequestMapping(value = "/{id}", method = DELETE)
     public String deleteCity(@PathVariable Long id) {

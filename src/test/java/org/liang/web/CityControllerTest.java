@@ -48,11 +48,11 @@ public class CityControllerTest {
     @Test
     public void testGetOne() throws Exception {
         City city = initCIty();
-        String get_exceped = "{\"id\":1,\"page\":1,\"rows\":10,"
+        String exceped = "{\"id\":1,\"page\":1,\"rows\":10,"
                     + "\"createtime\":null,\"updatetime\":null,\"name\":\"上海\",\"state\":\"20\"}";
         given(this.cityService.fetchById(1L)).willReturn(city);
         mvc.perform(get("/cities/1"))
-            .andExpect(content().string(equalTo(get_exceped)));
+            .andExpect(content().string(equalTo(exceped)));
     }
 
     /**

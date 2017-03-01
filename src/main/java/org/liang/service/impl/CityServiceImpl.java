@@ -10,6 +10,12 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+/**
+ * 城市demo service 实现.
+ * 
+ * @author L.Yang
+ * @version v1.0 2017年3月1日 下午4:27:17
+ */
 @Service
 public class CityServiceImpl implements CityService {
 
