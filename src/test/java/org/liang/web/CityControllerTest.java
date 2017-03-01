@@ -1,86 +1,110 @@
 package org.liang.web;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = MockServletContext.class)
-@WebAppConfiguration
+import java.util.ArrayList;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.liang.domain.entity.City;
+import org.liang.service.CityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(controllers = CityController.class)
 public class CityControllerTest {
+
+    @Autowired
     private MockMvc mvc;
 
-    @Before
-    public void setUp() throws Exception {
-        mvc = MockMvcBuilders.standaloneSetup(new CityController()).build();
+    @MockBean
+    private CityService cityService;
+
+    /**
+     * 测试 获取所有城市 api.
+     */
+    @Test
+    public void testGet() throws Exception {
+        given(this.cityService.fetchAll())
+            .willReturn(new ArrayList<City>());
+
+        mvc.perform(get("/cities/"))
+            .andExpect(status().isOk())
+            .andExpect(content().string(equalTo("[]")));
     }
 
     @Test
-    public void testCityController() throws Exception {
-        // 测试CityController
-        RequestBuilder request;
+    public void testGetOne() throws Exception {
+        City city = initCIty();
+        String get_exceped = "{\"id\":1,\"page\":1,\"rows\":10,"
+                    + "\"createtime\":null,\"updatetime\":null,\"name\":\"上海\",\"state\":\"20\"}";
+        given(this.cityService.fetchById(1L)).willReturn(city);
+        mvc.perform(get("/cities/1"))
+            .andExpect(content().string(equalTo(get_exceped)));
+    }
 
-        // 1、get查一下city列表，应该为空
-        request = get("/cities/");
-        mvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(content().string(equalTo("[]")));
+    /**
+     * 添加城市请求.
+     */
+    @Test
+    public void testPost() throws Exception {
+        City city = initCIty();
+        given(this.cityService.save(city)).willReturn(true);
 
-        // 2、post提交一个city
-        request = post("/cities/")
+        mvc.perform(post("/cities/")
             .param("id", "1")
             .param("name", "上海")
-            .param("state", "20");
-        mvc.perform(request)
+            .param("state", "20"))
             .andExpect(content().string(equalTo("success")));
+    }
 
-        // 3、get获取city列表，应该有刚才插入的数据
-        String get_exceped = "[{\"id\":1,\"page\":1,\"rows\":10,\""
-                    + "createtime\":null,\"updatetime\":null,\"name\":\"上海\",\"state\":\"20\"}]";
-        request = get("/cities/");
-        mvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(content().string(equalTo(get_exceped)));
-
-        // 4、put修改id为1的city
-        request = put("/cities/1")
-            .param("name", "测试终极大师")
-            .param("state", "30");
-        mvc.perform(request)
+    /**
+     * 测试更新城市请求.
+     */
+    @Test
+    public void testPut() throws Exception {
+        City city = mock(City.class);
+        city.setId(1L);
+        city.setName("北京");
+        city.setState("30");
+        
+        given(this.cityService.save(city)).willReturn(true);
+        
+        mvc.perform(put("/cities/1")
+            .param("name", "北京")
+            .param("state", "30"))
             .andExpect(content().string(equalTo("success")));
-
-        String get_exceped_put = "{\"id\":1,\"page\":1,\"rows\":10,\""
-            + "createtime\":null,\"updatetime\":null,\"name\":\"测试终极大师\",\"state\":\"30\"}";
-        // 5、get一个id为1的city
-        request = get("/cities/1");
-        mvc.perform(request)
-            .andExpect(content().string(equalTo(get_exceped_put)));
-
-        // 6、del删除id为1的city
-        request = delete("/cities/1");
-        mvc.perform(request)
-            .andExpect(content().string(equalTo("success")));
-
-        // 7、get查一下city列表，应该为空
-        request = get("/cities/");
-        mvc.perform(request)
-            .andExpect(status().isOk())
-            .andExpect(content().string(equalTo("[]")));
 
     }
+
+    /**
+     * 测试删除请求.
+     */
+    @Test
+    public void testDelete() throws Exception {
+        given(this.cityService.deleteCity(1L)).willReturn(true);
+        mvc.perform(delete("/cities/1"))
+            .andExpect(content().string(equalTo("success")));
+    }
+
+    private City initCIty() {
+        City city = new City();
+        city.setId(1L);
+        city.setName("上海");
+        city.setState("20");
+        return city;
+    }
+
 }

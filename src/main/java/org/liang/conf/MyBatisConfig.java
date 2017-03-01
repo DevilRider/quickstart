@@ -1,4 +1,4 @@
-package org.liang.db.conf;
+package org.liang.conf;
 
 import javax.sql.DataSource;
 

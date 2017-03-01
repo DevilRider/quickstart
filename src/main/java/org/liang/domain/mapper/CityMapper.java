@@ -8,5 +8,11 @@ public interface CityMapper {
     
     List<City> findAll();
 
+    City findOne(Long id);
+    
     int save(City city);
+    
+    int delete(Long id);
+    
+    int update(City city);
 }
