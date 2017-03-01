@@ -16,28 +16,28 @@ public class CityServiceImpl implements CityService {
 
     @Autowired
     private CityMapper cityMapper;
-    
+
     @Override
-    @Cacheable(value = "cityCache",keyGenerator = "wiselyKeyGenerator")  
+    @Cacheable(value = "cityCache", keyGenerator = "wiselyKeyGenerator")
     public List<City> fetchAll() {
         return cityMapper.findAll();
     }
 
     @Override
-    @CachePut(value = "cityCache",keyGenerator = "wiselyKeyGenerator")
+    @CacheEvict(value = "cityCache", keyGenerator = "wiselyKeyGenerator")
     public boolean save(City city) {
         int rst = cityMapper.save(city);
         return rst != 0 ? true : false;
     }
 
     @Override
-    @Cacheable(value = "cityCache",keyGenerator = "wiselyKeyGenerator")  
+    @Cacheable(value = "cityCache", keyGenerator = "wiselyKeyGenerator")
     public City fetchById(Long id) {
         return cityMapper.findOne(id);
     }
 
     @Override
-    @CachePut(value = "cityCache",keyGenerator = "wiselyKeyGenerator")
+    @CachePut(value = "cityCache", keyGenerator = "wiselyKeyGenerator")
     public boolean updateCity(Long id, City city) {
         city.setId(id);
         int rst = cityMapper.update(city);
@@ -45,7 +45,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    @CacheEvict(value = "cityCache",keyGenerator = "wiselyKeyGenerator")  
+    @CacheEvict(value = "cityCache", keyGenerator = "wiselyKeyGenerator")
     public boolean deleteCity(Long id) {
         int rst = cityMapper.delete(id);
         return rst != 0 ? true : false;
