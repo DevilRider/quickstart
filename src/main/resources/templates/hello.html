@@ -11,6 +11,9 @@
 </head>
 <body>
     <h1 th:text="${host}">Hello World</h1>
-    <a href="/hello"> hello link </a>
+    
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="注销"/>
+    </form>
 </body>
 </html>
