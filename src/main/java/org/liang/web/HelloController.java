@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class HelloController {
-
+    
     @RequestMapping("/hello")
     public String hello(ModelMap map) {
         map.addAttribute("host", "hello word");

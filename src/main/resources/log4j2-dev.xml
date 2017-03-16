@@ -45,7 +45,7 @@
     <loggers>
         <logger name="org.springframework" level="INFO" />
         <logger name="org.mybatis" level="INFO" />
-        <logger name="org.liang" level="debug">
+        <logger name="org.liang" level="trace">
             <appenderref ref="DevLog" />
             <appenderref ref="CONSOLE" />
         </logger>
